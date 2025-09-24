@@ -1,0 +1,49 @@
+.playlist-card {
+  background-color: #1a1a2e;
+  border: 2px solid #6e44ff;
+  border-radius: 12px;
+  padding: 1rem 1.5rem;
+  margin-bottom: 1.5rem;
+  color: #f0f0f0;
+  box-shadow: 0 0 12px rgba(110, 68, 255, 0.3);
+  transition: transform 0.2s ease;
+}
+
+.playlist-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 0 16px rgba(255, 78, 80, 0.4);
+}
+
+.playlist-card h3 {
+  font-size: 1.4rem;
+  margin-bottom: 0.5rem;
+  color: #ff4e50;
+}
+
+.playlist-card p {
+  margin: 0.3rem 0;
+  font-size: 1rem;
+}
+
+.playlist-card ul {
+  margin-top: 0.5rem;
+  padding-left: 1rem;
+  list-style: none;
+}
+
+.playlist-card li {
+  margin-bottom: 0.3rem;
+  font-size: 0.95rem;
+  color: #ccc;
+}
+
+.actions {
+  margin-top: 1rem;
+  display: flex;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+}
+
+.playlist-card.chill { border-color: #00bfff; }
+.playlist-card.party { border-color: #ff4e50; }
+.playlist-card.triste { border-color: #888; }
