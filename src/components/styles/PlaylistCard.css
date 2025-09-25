@@ -13,7 +13,12 @@
   transform: scale(1.02);
   box-shadow: 0 0 16px rgba(255, 78, 80, 0.4);
 }
-
+.playlist-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: flex-start;
+}
 .playlist-card h3 {
   font-size: 1.4rem;
   margin-bottom: 0.5rem;

@@ -1,29 +1,35 @@
 import '../styles/PlaylistCard.css'
 import Button from "../atoms/Button";
+import { useState } from 'react';
 
 function PlaylistCard({ playlist, onDelete, onView }) {
-  const { title, mood, songs } = playlist;
+  const [expanded, setExpanded] = useState(false);
+  const { title, songs } = playlist;
 
   return (
-    <div className={`playlist-card ${mood.toLowerCase()}`}>
+    <div className="playlist-card">
       <h3>{title}</h3>
-      <p><strong>Mood:</strong> {mood || 'Nessun mood'}</p>
       <p><strong>Canzoni:</strong> {songs.length}</p>
 
-      <ul>
-        {songs.map((song, index) => (
-          <li key={index}>
-            🎵 {song.title} - {song.artist} ({song.genre})
-          </li>
-        ))}
-      </ul>
-
       <div className="actions">
-        <Button onClick={() => onView(playlist)}>👁️ Visualizza</Button>
+        <Button onClick={() => setExpanded(!expanded)}>
+          {expanded ? "👁️ Nascondi" : "👁️ Visualizza"}
+        </Button>
         <Button onClick={() => onDelete(playlist.id)}>🗑️ Elimina</Button>
       </div>
+
+      {expanded && (
+        <ul className="list">
+          {songs.map((song, index) => (
+            <li key={index}>
+              🎵 {song.title} – {song.artist}
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
+
 }
 
 export default PlaylistCard;

@@ -22,9 +22,6 @@ export default async function Home() {
       </section>
 
       <section>
-      </section>
-
-      <section>
         <h2>Canzoni Popolari</h2>
         <ul className="list">
           {popularSongs.map((track, i) => (

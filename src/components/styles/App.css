@@ -1,10 +1,15 @@
-.app {
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+.home {
   min-height: 100vh;
   padding: 2rem;
   font-family: 'Segoe UI', sans-serif;
   color: #f0f0f0;
   animation: warmPulse 8s ease-in-out infinite;
-  background: linear-gradient(135deg, #ff6e7f, #ffb88c);
+  background: linear-gradient(135deg, #6f141f, #ffb88c);
   background-size: 400% 400%;
 }
 

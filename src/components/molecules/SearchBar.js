@@ -2,7 +2,7 @@ import '../styles/SearchBar.css'
 
 import Input from "../atoms/Input";
 
-function SearchBar({ query, setQuery }) {
+function SearchBar({ query, setQuery}) {
   return (
     <form className="search-bar" onSubmit={(e) => e.preventDefault()}>
       <Input

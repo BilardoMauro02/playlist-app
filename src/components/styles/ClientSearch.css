@@ -1,0 +1,33 @@
+/* Sfoca il contenuto sotto */
+.blur-overlay {
+  filter: blur(4px);
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Modal centrale */
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #1a1a1a;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.6);
+  z-index: 1000;
+  color: #f0f0f0;
+  width: 90%;
+  max-width: 400px;
+}
+
+/* Sfondo scuro dietro il modal */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(10, 10, 10, 0.6);
+  z-index: 999;
+}
