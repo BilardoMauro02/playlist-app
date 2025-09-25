@@ -29,7 +29,7 @@ export default function SearchResults({ query, onAddTrack }) {
 
   return (
     <div className="search-results-container">
-      <ul className="list">
+      <ul className="track-list">
         {tracks.map((track, i) => (
           <TrackItem key={i} track={track} onAdd={() => onAddTrack(track)} />
         ))}
