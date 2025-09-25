@@ -1,4 +1,7 @@
 .playlist-card {
+  flex: 0 0 auto;
+  width: fit-content;
+  max-width: 100%;
   background-color: #1a1a2e;
   border: 2px solid #6e44ff;
   border-radius: 12px;
@@ -6,7 +9,12 @@
   margin-bottom: 1.5rem;
   color: #f0f0f0;
   box-shadow: 0 0 12px rgba(110, 68, 255, 0.3);
+  box-sizing: border-box;
   transition: transform 0.2s ease;
+}
+
+a{
+  text-decoration: none;
 }
 
 .playlist-card:hover {
@@ -15,10 +23,11 @@
 }
 .playlist-grid {
   display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  justify-content: flex-start;
+  flex-wrap: wrap;               /* ✅ le card vanno a capo se serve */
+  gap: 1rem;                     /* ✅ spazio tra le card */
+  justify-content: flex-start;  /* ✅ allineate a sinistra */
 }
+
 .playlist-card h3 {
   font-size: 1.4rem;
   margin-bottom: 0.5rem;

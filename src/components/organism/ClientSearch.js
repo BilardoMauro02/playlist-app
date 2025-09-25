@@ -14,9 +14,22 @@ export default function ClientSearch() {
   const [query, setQuery] = useState("");
   const [playlist, setPlaylist] = useState([]);
   const [playlistList, setPlaylistList] = useState({});
-  const [playlistName, setPlaylistName] = useState("");
   const [selectedTrack, setSelectedTrack] = useState(null);
   const [showModal, setShowModal] = useState(false);
+
+  const fetchYoutubeUrl = async (track) => {
+    try {
+      const res = await fetch(`/api/youtube-search?artist=${encodeURIComponent(track.artist)}&title=${encodeURIComponent(track.name)}`);
+      if (!res.ok) return null;
+      const data = await res.json();
+      console.log("Risposta API:", data);
+      return data.url || null;
+      
+    } catch (err) {
+      console.error("Errore YouTube:", err);
+      return null;
+    }
+  };
 
   // Carica da localStorage
   useEffect(() => {
@@ -42,13 +55,16 @@ export default function ClientSearch() {
     <>
       <div className={showModal ? "blur-overlay" : ""}>
         <section>
-          <SearchBar query={query} setQuery={setQuery} />
+          <SearchBar query={query} setQuery={setQuery} />  
+        </section>
+        <section className="search-results-wrapper">
+        <div className="search-results">
           <SearchResults query={query} onAddTrack={handleAddClick} />
+        </div>
         </section>
         <h2>🎧 Playlist</h2>
         {Object.keys(playlistList).length > 0 && (
           <section className="playlist-grid">
-            
             {Object.entries(playlistList).map(([name, tracks], i) => (
               <PlaylistCard
                 key={name}
@@ -58,6 +74,7 @@ export default function ClientSearch() {
                   songs: tracks.map((t) => ({
                     title: t.name,
                     artist: t.artist,
+                    youtubeUrl: t.youtubeUrl,
                   })),
                 }}
                 onDelete={(id) => {
@@ -86,11 +103,15 @@ export default function ClientSearch() {
               {Object.keys(playlistList).map((name) => (
                 <li key={name}>
                   <Button
-                    onClick={() => {
+                    onClick={async () => {
+                      const youtubeUrl = await fetchYoutubeUrl(selectedTrack);
+                      const trackWithUrl = { ...selectedTrack, youtubeUrl };
+
                       const updated = {
                         ...playlistList,
-                        [name]: [...(playlistList[name] || []), selectedTrack],
+                        [name]: [...(playlistList[name] || []), trackWithUrl],
                       };
+
                       setPlaylistList(updated);
                       localStorage.setItem(
                         "playlistList",
@@ -107,14 +128,19 @@ export default function ClientSearch() {
 
             <h3>Crea nuova playlist</h3>
             <form
-              onSubmit={(e) => {
+              onSubmit={async (e) => {
                 e.preventDefault();
                 const name = e.target.playlistName.value.trim();
                 if (!name) return;
+
+                const youtubeUrl = await fetchYoutubeUrl(selectedTrack);
+                const trackWithUrl = { ...selectedTrack, youtubeUrl };
+
                 const updated = {
                   ...playlistList,
-                  [name]: [selectedTrack],
+                  [name]: [trackWithUrl],
                 };
+
                 setPlaylistList(updated);
                 localStorage.setItem("playlistList", JSON.stringify(updated));
                 setShowModal(false);
