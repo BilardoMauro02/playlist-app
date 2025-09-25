@@ -3,14 +3,35 @@
   padding: 0;
   box-sizing: border-box;
 }
+
+body {
+  margin: 0;
+  font-family: sans-serif;
+}
+
+.container {
+  display: flex;
+  height: 100vh;
+}
+
+.sidebar {
+  height: 100vh; /* ✅ riempie tutta la finestra */
+  display: flex;
+  flex-direction: column;
+  background: #f4f4f4;
+  padding: 1rem;
+}
+
 .home {
   min-height: 100vh;
+  flex: 1;
   padding: 2rem;
   font-family: 'Segoe UI', sans-serif;
   color: #f0f0f0;
   animation: warmPulse 8s ease-in-out infinite;
   background: linear-gradient(135deg, #6f141f, #8cff9d);
   background-size: 400% 400%;
+  overflow-y: auto;
 }
 
 /* Animazione del gradiente */

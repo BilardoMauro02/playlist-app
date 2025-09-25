@@ -1,12 +1,11 @@
 "use client";
 
 import "../styles/ClientSearch.css";
-
 import PlaylistCard from "../molecules/PlaylistCard";
 
 import { useState, useEffect } from "react";
 import SearchBar from "../molecules/SearchBar";
-import SearchResults from "./SearchResults";
+import SearchResults from "../organism/SearchResults";
 import Button from "../atoms/Button";
 import Input from "../atoms/Input";
 
