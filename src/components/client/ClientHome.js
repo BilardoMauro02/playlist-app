@@ -5,20 +5,21 @@ import { useState, useEffect } from "react";
 import ClientSidebar from "./ClientSidebar";
 import ClientSearch from "./ClientSearch";
 
-export default function ClientHome({ initialPlaylists, popularSongs }) {
-  const [playlists, setPlaylists] = useState(initialPlaylists);
+export default function ClientHome() {
+  const [playlists, setPlaylists] = useState([]);
+  const [popularSongs, setPopularSongs] = useState([]);
   const [playlistList, setPlaylistList] = useState({});
   const [hydrated, setHydrated] = useState(false);
 
   const router = useRouter();
 
-    const handleSelectPlaylist = (id) => {
-        router.push(`/playlist/${encodeURIComponent(id)}`);
-    };
+  const handleSelectPlaylist = (id) => {
+    router.push(`/playlist/${encodeURIComponent(id)}`);
+  };
 
-    const handleSelectHome = () => {
-        router.push("/");
-    };
+  const handleSelectHome = () => {
+    router.push("/");
+  };
 
   // Carica da localStorage al primo render
   useEffect(() => {
@@ -32,6 +33,42 @@ export default function ClientHome({ initialPlaylists, popularSongs }) {
         console.error("Errore parsing playlistList:", err);
       }
     }
+
+    useEffect(() => {
+      const fetchPlaylists = async () => {
+        try {
+          const res = await fetch("/api/playlists");
+          const data = await res.json();
+          setPlaylists(data || []);
+        } catch (err) {
+          console.error("Errore fetch playlist:", err);
+        }
+      };
+
+      fetchPlaylists();
+    }, []);
+
+    useEffect(() => {
+      const fetchInitialData = async () => {
+        try {
+          const res = await fetch("/api/playlists");
+          const data = await res.json();
+          setPlaylists(data || []);
+        } catch (err) {
+          console.error("Errore fetch iniziale playlist:", err);
+        }
+
+        try {
+          const top = await fetch("/api/top-tracks");
+          const data = await top.json();
+          setPopularSongs(data || []);
+        } catch (err) {
+          console.error("Errore fetch topTracks:", err);
+        }
+      };
+
+      fetchInitialData();
+    }, []);
 
     setHydrated(true);
   }, []);
@@ -64,11 +101,11 @@ export default function ClientHome({ initialPlaylists, popularSongs }) {
 
   return (
     <div style={{ display: "flex", height: "100vh" }}>
-        <ClientSidebar 
+      <ClientSidebar
         playlists={playlists}
         onSelectHome={handleSelectHome}
         onSelectPlaylist={handleSelectPlaylist}
-        />
+      />
       <main className="home">
         <h1>🎼 Playlist Creator</h1>
 
