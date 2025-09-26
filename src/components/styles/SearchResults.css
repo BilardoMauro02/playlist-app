@@ -1,12 +1,3 @@
-.track-list {
-  list-style: none;
-  padding: 0;           
-  column-count: 2;             
-  column-gap: 2rem;
-  width: fit-content;
-  max-width: 90vw;
-}
-
 .track-item {
   break-inside: avoid;
   background-color: #1c1c1c;
@@ -24,11 +15,17 @@
 }
 
 
-.track-title {
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: #fff;
+.track-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.01rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  box-sizing: border-box;
 }
+
 
 .track-artist {
   font-size: 0.9rem;
