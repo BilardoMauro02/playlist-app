@@ -3,7 +3,7 @@
   background-color: #121212;
   padding: 1rem;
   box-shadow: 0 0 12px rgba(0,0,0,0.4);
-  border-right: 2px solid #6e44ff;
+  border-right: 2px solid #4513f8;
   height: 100vh;
   display: flex;
   flex-direction: column;
@@ -43,6 +43,7 @@
   font-size: 1rem;
   cursor: pointer;
   transition: background 0.2s ease;
+  list-style: none;
 }
 
 .playlist-item:hover {

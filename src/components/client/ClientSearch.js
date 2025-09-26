@@ -9,10 +9,8 @@ import SearchResults from "../organism/SearchResults";
 import Button from "../atoms/Button";
 import Input from "../atoms/Input";
 
-export default function ClientSearch() {
+export default function ClientSearch({playlistList, setPlaylistList}) {
   const [query, setQuery] = useState("");
-  const [playlist, setPlaylist] = useState([]);
-  const [playlistList, setPlaylistList] = useState({});
   const [selectedTrack, setSelectedTrack] = useState(null);
   const [showModal, setShowModal] = useState(false);
 
@@ -32,18 +30,14 @@ export default function ClientSearch() {
 
   // Carica da localStorage
   useEffect(() => {
-    const savedPlaylist = localStorage.getItem("playlist");
-    if (savedPlaylist) setPlaylist(JSON.parse(savedPlaylist));
-
     const savedList = localStorage.getItem("playlistList");
     if (savedList) setPlaylistList(JSON.parse(savedList));
   }, []);
 
   // Salva su localStorage
   useEffect(() => {
-    localStorage.setItem("playlist", JSON.stringify(playlist));
     localStorage.setItem("playlistList", JSON.stringify(playlistList));
-  }, [playlist, playlistList]);
+  }, [playlistList]);
 
   const handleAddClick = (track) => {
     setSelectedTrack(track);
@@ -61,34 +55,7 @@ export default function ClientSearch() {
           <SearchResults query={query} onAddTrack={handleAddClick} />
         </div>
         </section>
-        <h2>🎧 Playlist</h2>
-        {Object.keys(playlistList).length > 0 && (
-          <section className="playlist-grid">
-            {Object.entries(playlistList).map(([name, tracks], i) => (
-              <PlaylistCard
-                key={name}
-                playlist={{
-                  id: `playlist-${i}`,
-                  title: name,
-                  songs: tracks.map((t) => ({
-                    title: t.name,
-                    artist: t.artist,
-                    youtubeUrl: t.youtubeUrl,
-                  })),
-                }}
-                onDelete={(id) => {
-                  const updated = { ...playlistList };
-                  delete updated[name];
-                  setPlaylistList(updated);
-                  localStorage.setItem("playlistList", JSON.stringify(updated));
-                }}
-                onView={(playlist) => {
-                  console.log("Visualizza playlist:", playlist);
-                }}
-              />
-            ))}
-          </section>
-        )}
+        
       </div>
 
       {showModal && selectedTrack && (
@@ -96,8 +63,9 @@ export default function ClientSearch() {
           <div className="modal-backdrop" onClick={() => setShowModal(false)} />
           <div className="modal">
             <h2>🎶 Aggiungi a playlist</h2>
+            <br></br>
 
-            <h3>Playlist esistenti</h3>
+            <h3>Playlist esistenti</h3><br></br>
             <ul>
               {Object.keys(playlistList).map((name) => (
                 <li key={name}>
@@ -142,6 +110,7 @@ export default function ClientSearch() {
 
                 setPlaylistList(updated);
                 localStorage.setItem("playlistList", JSON.stringify(updated));
+                window.dispatchEvent(new Event("playlistListUpdated"));
                 setShowModal(false);
               }}
             >

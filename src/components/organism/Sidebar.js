@@ -1,25 +1,21 @@
 import React from "react";
 import "../styles/Sidebar.css";
 
-const Sidebar = ({ playlists, onSelectHome, onSelectPlaylist }) => {
+function Sidebar({ playlists, onSelectHome, onSelectPlaylist }) {
   return (
-    <aside className="sidebar">
+    <div className="sidebar">
       <button className="home-button" onClick={onSelectHome}>
-        Home
+        🏠 Home
       </button>
-      <ul className="playlist-list">
-        {!playlists || Object.keys(playlists).length === 0 ? (
-          <li className="playlist-item">Nessuna playlist trovata</li>
-        ) : (
-          Object.keys(playlists).map((name, i) => (
-            <li key={i} className="playlist-item">
-              {name}
-            </li>
-          ))
-        )}
+      <ul>
+        {Object.entries(playlists).map(([id, tracks]) => (
+          <li className="playlist-item" key={id} onClick={() => onSelectPlaylist(id)}>
+            {id.replace("playlist-", "")}
+          </li>
+        ))}
       </ul>
-    </aside>
+    </div>
   );
-};
+}
 
 export default Sidebar;

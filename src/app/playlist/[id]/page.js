@@ -1,30 +1,39 @@
-import { notFound } from 'next/navigation';
+"use client";
+import { useEffect, useState } from "react";
 
-export async function getUserPlaylists() {
-  // Nessuna playlist iniziale
-  return [];
-}
-
-
-export default async function PlaylistPage({ params }) {
+export default function PlaylistPage({ params }) {
   const { id } = params;
-  const playlists = await getUserPlaylists(); // recupera tutte le playlist create dall’utente
-  const playlist = playlists.find((p) => p.id === id);
+  const [tracks, setTracks] = useState([]);
 
-  if (!playlist) return notFound();
+  useEffect(() => {
+    const stored = localStorage.getItem("playlistList");
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored);
+        setTracks(parsed[id] || []);
+      } catch (err) {
+        console.error("Errore parsing:", err);
+      }
+    }
+  }, [id]);
 
   return (
-    <main className="app">
-      <h1>🎧 {playlist.title}</h1>
-      <p>Mood: {playlist.mood}</p>
-
-      <ul>
-        {playlist.songs.map((song, i) => (
-          <li key={i}>
-            🎵 {song.title} - {song.artist}
-          </li>
-        ))}
-      </ul>
-    </main>
+    <>
+      <h2>🎧 {id.replace("playlist-", "")}</h2>
+      {tracks.length === 0 ? (
+        <p>Playlist vuota</p>
+      ) : (
+        <ul className="playlist-grid">
+          {tracks.map((track, i) => (
+            <li key={i}>
+              <div>{track.name} – {track.artist}</div>
+              {track.youtubeUrl && (
+                <a href={track.youtubeUrl} target="_blank">▶️ YouTube</a>
+              )}
+            </li>
+          ))}
+        </ul>
+      )}
+    </>
   );
 }
