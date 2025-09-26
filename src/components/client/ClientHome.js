@@ -6,10 +6,18 @@ import ClientSidebar from "./ClientSidebar";
 import ClientSearch from "./ClientSearch";
 
 export default function ClientHome() {
-  const [playlists, setPlaylists] = useState([]);
+  const [playlists, setPlaylists] = useState();
   const [popularSongs, setPopularSongs] = useState([]);
-  const [playlistList, setPlaylistList] = useState({});
-  const [hydrated, setHydrated] = useState(false);
+  const [playlistList, setPlaylistList] = useState(() => {
+    if (typeof window === "undefined") return {};
+    try {
+      const stored = localStorage.getItem("playlistList");
+      return stored ? JSON.parse(stored) : {};
+    } catch (err) {
+      console.error("Errore parsing iniziale playlistList:", err);
+      return {};
+    }
+  });
 
   const router = useRouter();
 
@@ -21,72 +29,40 @@ export default function ClientHome() {
     router.push("/");
   };
 
-  // Carica da localStorage al primo render
   useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    const stored = localStorage.getItem("playlistList");
-    if (stored) {
-      try {
-        setPlaylistList(JSON.parse(stored));
-      } catch (err) {
-        console.error("Errore parsing playlistList:", err);
-      }
-    }
-
-    useEffect(() => {
-      const fetchPlaylists = async () => {
-        try {
-          const res = await fetch("/api/playlists");
-          const data = await res.json();
-          setPlaylists(data || []);
-        } catch (err) {
-          console.error("Errore fetch playlist:", err);
-        }
-      };
-
-      fetchPlaylists();
-    }, []);
-
-    useEffect(() => {
-      const fetchInitialData = async () => {
-        try {
-          const res = await fetch("/api/playlists");
-          const data = await res.json();
-          setPlaylists(data || []);
-        } catch (err) {
-          console.error("Errore fetch iniziale playlist:", err);
-        }
-
-        try {
-          const top = await fetch("/api/top-tracks");
-          const data = await top.json();
-          setPopularSongs(data || []);
-        } catch (err) {
-          console.error("Errore fetch topTracks:", err);
-        }
-      };
-
-      fetchInitialData();
-    }, []);
-
-    setHydrated(true);
-  }, []);
-
-  // Salva su localStorage quando playlistList cambia
-  useEffect(() => {
-    if (!hydrated) return;
-
     try {
       localStorage.setItem("playlistList", JSON.stringify(playlistList));
       window.dispatchEvent(new Event("playlistListUpdated"));
     } catch (err) {
       console.error("Errore salvataggio playlistList:", err);
     }
-  }, [playlistList, hydrated]);
+  }, [playlistList]);
+
+  useEffect(() => {
+    const fetchInitialData = async () => {
+      try {
+        const [playlistRes, topRes] = await Promise.all([
+          fetch("/api/playlist"),
+          fetch("/api/toptracks"),
+        ]);
+
+        const playlistData = playlistRes.ok ? await playlistRes.json() : [];
+        const topData = topRes.ok ? await topRes.json() : [];
+
+        setPlaylists(playlistData || []);
+        setPopularSongs(topData || []);
+      } catch (err) {
+        console.error("Errore fetch iniziale:", err);
+        setPlaylists([]);
+        setPopularSongs([]);
+      }
+    };
+
+    fetchInitialData();
+  }, []);
 
   const handleCreatePlaylist = async (newPlaylist) => {
-    const res = await fetch("/api/playlists", {
+    const res = await fetch("/api/playlist", {
       method: "POST",
       body: JSON.stringify(newPlaylist),
       headers: { "Content-Type": "application/json" },

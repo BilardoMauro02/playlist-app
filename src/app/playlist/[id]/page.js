@@ -1,8 +1,8 @@
 "use client";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 export default function PlaylistPage({ params }) {
-  const { id } = params;
+  const { id } = React.use(params);
   const [tracks, setTracks] = useState([]);
 
   useEffect(() => {
